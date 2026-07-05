@@ -43,6 +43,7 @@ export type View =
   | { name: 'reconciliation-detail'; id: string }
   | { name: 'gl-writeoff-create' }
   | { name: 'gl-writeoff-form' }
+  | { name: 'gl-writeoff-detail'; id: string }
   | { name: 'gl-writeoff-list' }
   | { name: 'module'; module: ModuleKey }
   | { name: 'account-group-list' }

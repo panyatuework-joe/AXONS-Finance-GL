@@ -28,6 +28,22 @@ export const PHRASES: Record<string, string> = {
   'วันที่เริ่มตัดบัญชี': 'Write-off Start Date',
   'ค้นหาด้วย รหัสรายการตัดบัญชี': 'Search by write-off code',
   'นำเข้าไฟล์รายการตัดบัญชี': 'Import Write-off File',
+  'ผลการนำเข้าไฟล์': 'Import Results',
+  'ไม่พบข้อมูลในไฟล์': 'No data found in the file',
+  'ไม่พบชื่อบริษัทในไฟล์': 'No company name found in the file',
+  'ไฟล์นี้มีมากกว่า 1 บริษัท กรุณาแยกไฟล์ต่อบริษัท': 'This file contains more than 1 company. Please split it into one file per company',
+  'ไม่พบหน่วยงานหลัก': 'Main department is missing',
+  'ไม่พบประเภทเอกสารอ้างอิง': 'Reference document type is missing',
+  'ไม่พบเลขที่เอกสารอ้างอิง': 'Reference document number is missing',
+  'ไม่พบประเภท': 'Category is missing',
+  'ไม่พบรายละเอียด': 'Description is missing',
+  'ยอดเงินรวมทั้งสัญญาไม่ถูกต้อง': 'Total contract amount is invalid',
+  'จำนวนงวดไม่ถูกต้อง': 'Number of installments is invalid',
+  'รูปแบบงวดเริ่มต้นไม่ถูกต้อง (MM/YYYY)': 'Invalid starting period format (MM/YYYY)',
+  'ไฟล์ต้นทาง': 'Source File',
+  'เหตุผลที่ไม่ผ่าน': 'Failure Reason',
+  'รายการที่นำเข้าไม่สำเร็จ.csv': 'Failed_Import_Rows.csv',
+  'ดาวน์โหลดรายการที่ไม่ผ่าน': 'Download Failed Rows',
   'รายการตัดบัญชี.csv': 'Write-off_Entries.csv',
   'ระหว่างดำเนินการ': 'In Progress',
   'หยุดชั่วคราว': 'Paused',
@@ -111,6 +127,7 @@ export const PHRASES: Record<string, string> = {
 
   // Common buttons / words (shared across many pages)
   'ยกเลิก': 'Cancel',
+  'ปิด': 'Close',
   'เพิ่ม': 'Add',
   'บันทึก': 'Save',
   'แก้ไข': 'Edit',
@@ -375,6 +392,9 @@ export const TEMPLATES: Record<string, string> = {
   'รายละเอียดการตรวจสอบ - {name}': 'Check Details - {name}',
   'ผลลัพธ์การค้นหา: {count}': 'Search results: {count}',
   'ชื่อกลุ่มบัญชี ({lang})': 'Account Group Name ({lang})',
+  'รูปแบบไฟล์ CSV แต่ละไฟล์คือ 1 บริษัท คอลัมน์: {columns}': 'CSV format, one company per file. Columns: {columns}',
+  'นำเข้าสำเร็จ {count} รายการ': 'Imported {count} entries successfully',
+  'ข้าม {count} แถวที่ข้อมูลไม่ถูกต้อง': 'Skipped {count} invalid rows',
 };
 
 export function translate(text: string, language: Language): string {

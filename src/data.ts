@@ -8,6 +8,7 @@ import type {
   ReconciliationItem,
   Row,
 } from './types';
+import { glWriteoffPerPeriodAmount } from './utils';
 
 export const YEAR_OPTIONS = ['2024', '2025', '2026', '2027'];
 
@@ -235,7 +236,7 @@ const GL_WRITEOFF_SEED: {
 
 export function seedGlWriteoffEntries(): GlWriteoffEntry[] {
   return GL_WRITEOFF_SEED.map((item, i) => {
-    const monthly = Math.floor((item.totalAmount / item.installments) * 100) / 100;
+    const monthly = glWriteoffPerPeriodAmount(item.totalAmount, item.installments);
     return {
       id: `glw-${i + 1}`,
       code: `RCE-26062526-${String(i + 1).padStart(4, '0')}`,

@@ -729,7 +729,7 @@ button {
   font-weight: 600;
   line-height: 24px;
   color: #344054;
-  height: 44px;
+  height: 56px;
 }
 
 .ft-table td {
@@ -739,7 +739,7 @@ button {
   font-weight: 400;
   line-height: 24px;
   color: #344054;
-  height: 44px;
+  height: 56px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -756,7 +756,23 @@ button {
   position: sticky;
   right: 0;
   background: #ffffff;
-  box-shadow: -12px 0 20px -8px rgba(16, 24, 40, 0.4);
+}
+
+td.ft-table-action-col {
+  overflow: visible;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.ft-table-action-col::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -10px;
+  width: 10px;
+  background: linear-gradient(to right, transparent, rgba(16, 24, 40, 0.05));
+  pointer-events: none;
 }
 
 th.ft-table-action-col {
@@ -801,7 +817,7 @@ th.ft-table-action-col {
   padding: 2px 10px;
   border-radius: 16px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 400;
   line-height: 20px;
   white-space: nowrap;
 }
@@ -1302,12 +1318,13 @@ th.ft-table-action-col {
 .aft-monthly-table th {
   background: #f5fafe;
   border-bottom: 1px solid #e4e7ec;
-  padding: 16px;
+  padding: 10px 16px;
   font-size: 16px;
   font-weight: 600;
   line-height: 24px;
   color: #344054;
   text-align: left;
+  height: 56px;
 }
 
 .aft-monthly-table th:last-child {
@@ -1316,15 +1333,16 @@ th.ft-table-action-col {
 
 .aft-monthly-table td {
   border-bottom: 1px solid #e4e7ec;
-  padding: 12px 16px;
+  padding: 10px 16px;
   font-size: 16px;
   color: #344054;
   line-height: 24px;
+  height: 56px;
 }
 
 .aft-monthly-table tr:last-child td {
   border-bottom: none;
-  padding: 16px;
+  padding: 10px 16px;
   font-weight: 600;
   background: #f5fafe;
 }
@@ -2206,6 +2224,64 @@ th.ft-table-action-col {
   gap: 6px;
 }
 
+/* ===== IMPORT RESULT MODAL ===== */
+.import-result-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.import-result-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #e4e7ec;
+}
+
+.import-result-row--ok {
+  background: #ecfdf3;
+  border-color: #abefc6;
+}
+
+.import-result-row--partial {
+  background: #fffaeb;
+  border-color: #fedf89;
+}
+
+.import-result-row--fail {
+  background: #fef3f2;
+  border-color: #fecdca;
+}
+
+.import-result-file {
+  font-size: 14px;
+  font-weight: 600;
+  color: #344054;
+  word-break: break-all;
+}
+
+.import-result-company {
+  font-size: 13px;
+  color: #667085;
+  margin-top: 2px;
+}
+
+.import-result-status {
+  flex-shrink: 0;
+  font-size: 14px;
+  color: #344054;
+  text-align: right;
+}
+
+.import-result-status--fail {
+  color: #d92d20;
+}
+
 /* ===== EMPTY STATE ===== */
 .empty-state {
   display: flex;
@@ -2466,13 +2542,6 @@ th.ft-table-action-col {
   color: #344054;
 }
 
-.recon-table td {
-  height: auto;
-  padding: 12px 16px;
-  vertical-align: middle;
-  white-space: normal;
-}
-
 .recon-name {
   font-size: 16px;
   color: #344054;
@@ -2484,7 +2553,6 @@ th.ft-table-action-col {
 .recon-category {
   font-size: 13px;
   color: #98a2b3;
-  margin-top: 2px;
 }
 
 .recon-check-btn {
@@ -2580,10 +2648,12 @@ th.ft-table-action-col {
   text-align: left;
   font-size: 14px;
   font-weight: 600;
+  line-height: 24px;
   color: #344054;
   white-space: nowrap;
   cursor: pointer;
   user-select: none;
+  height: 56px;
 }
 
 .sort-th-inner {
@@ -2596,11 +2666,13 @@ th.ft-table-action-col {
   border-bottom: 1px solid #e4e7ec;
   padding: 10px 16px;
   font-size: 14px;
+  line-height: 24px;
   color: #344054;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 220px;
+  height: 56px;
 }
 
 .recon-detail-row--fail td {
@@ -2612,8 +2684,20 @@ th.ft-table-action-col {
   position: sticky;
   right: 0;
   background: #ffffff;
-  box-shadow: -12px 0 20px -8px rgba(16, 24, 40, 0.4);
+  overflow: visible;
   cursor: default;
+}
+
+.recon-detail-table th:last-child::before,
+.recon-detail-table td:last-child::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -10px;
+  width: 10px;
+  background: linear-gradient(to right, transparent, rgba(16, 24, 40, 0.05));
+  pointer-events: none;
 }
 
 .recon-detail-table th:last-child {
@@ -2628,18 +2712,6 @@ th.ft-table-action-col {
 
 /* ===== GL WRITE-OFF (ตัดบัญชี GL) ===== */
 .status-badge--info { background: #eff8ff; color: #175cd3; }
-
-.glw-kebab-wrapper {
-  position: relative;
-  display: inline-flex;
-}
-
-.glw-kebab-menu {
-  top: calc(100% + 4px);
-  right: 0;
-  left: auto;
-  min-width: 140px;
-}
 
 .glw-hint {
   font-size: 14px;
@@ -2722,22 +2794,6 @@ th.ft-table-action-col {
   margin-top: 2px;
 }
 
-.glw-add-line-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  border: 1px solid #1570ef;
-  border-radius: 8px;
-  background: #ffffff;
-  color: #1570ef;
-  font-size: 14px;
-  font-weight: 600;
-  white-space: nowrap;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
 .glw-line-table-wrapper {
   overflow-x: auto;
   margin-bottom: 24px;
@@ -2807,14 +2863,20 @@ th.ft-table-action-col {
   background: #ffffff;
 }
 
+td.ft-table-status-col {
+  overflow: visible;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
 .ft-table-status-col::before {
   content: '';
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 0;
-  width: 12px;
-  background: linear-gradient(to right, rgba(16, 24, 40, 0.16), transparent);
+  left: -10px;
+  width: 10px;
+  background: linear-gradient(to right, transparent, rgba(16, 24, 40, 0.11));
   pointer-events: none;
 }
 

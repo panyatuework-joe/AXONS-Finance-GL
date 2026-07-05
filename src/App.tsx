@@ -16,6 +16,7 @@ import ReconciliationDetailPage from './pages/ReconciliationDetailPage';
 import GlWriteoffPage from './pages/GlWriteoffPage';
 import GlWriteoffListPage from './pages/GlWriteoffListPage';
 import GlWriteoffFormPage from './pages/GlWriteoffFormPage';
+import GlWriteoffDetailPage from './pages/GlWriteoffDetailPage';
 import { SpinnerIcon } from './icons';
 import { MODULE_CONFIGS } from './data';
 import {
@@ -48,6 +49,7 @@ function sidebarKeyForView(view: View): SidebarKey {
       return 'reconciliation';
     case 'gl-writeoff-create':
     case 'gl-writeoff-form':
+    case 'gl-writeoff-detail':
       return 'gl-writeoff-create';
     case 'gl-writeoff-list':
       return 'gl-writeoff-list';
@@ -184,11 +186,15 @@ function AppShellRouter() {
         return (
           <GlWriteoffListPage
             data={glWriteoffEntries}
-            onChange={(rows) => {
-              setGlWriteoffEntries(rows);
-              persist(() => glWriteoffApi.replace(rows));
-            }}
             onCreate={() => setView({ name: 'gl-writeoff-form' })}
+            onView={(id) => setView({ name: 'gl-writeoff-detail', id })}
+            onImport={(entries) => {
+              setGlWriteoffEntries((prev) => {
+                const next = [...entries, ...prev];
+                persist(() => glWriteoffApi.replace(next));
+                return next;
+              });
+            }}
           />
         );
       case 'gl-writeoff-form':
@@ -202,6 +208,20 @@ function AppShellRouter() {
             }}
           />
         );
+      case 'gl-writeoff-detail': {
+        const entry = glWriteoffEntries.find((e) => e.id === view.id);
+        if (!entry) return null;
+        return (
+          <GlWriteoffDetailPage
+            entry={entry}
+            onBack={() => setView({ name: 'gl-writeoff-create' })}
+            onDelete={() => {
+              setGlWriteoffEntries((prev) => prev.filter((r) => r.id !== entry.id));
+              persist(() => glWriteoffApi.remove(entry.id));
+            }}
+          />
+        );
+      }
       case 'gl-writeoff-list':
         return <GlWriteoffPage title="รายการตัดบัญชี" />;
       case 'reconciliation':

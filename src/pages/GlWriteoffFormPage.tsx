@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { GlWriteoffEntry, GlWriteoffLine } from '../types';
 import {
   GL_WRITEOFF_COMPANY,
@@ -15,15 +15,14 @@ import { useApp } from '../context/AppContext';
 import Combobox from '../components/Combobox';
 import Dialog from '../components/Dialog';
 import EmptyState from '../components/EmptyState';
-import { ChevronBreadcrumbIcon, PlusIcon, CloseIcon, DeleteIcon } from '../icons';
+import { buildGlWriteoffSchedule, formatWholeAmount, glWriteoffPerPeriodAmount } from '../utils';
+import { ChevronBreadcrumbIcon, CloseIcon } from '../icons';
 
 interface Props {
   existing: GlWriteoffEntry[];
   onCancel: () => void;
   onSave: (entry: GlWriteoffEntry) => void;
 }
-
-const THAI_BE_MONTHS_PER_YEAR = 12;
 
 function formatMoney(n: number): string {
   return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -71,23 +70,18 @@ export default function GlWriteoffFormPage({ existing, onCancel, onSave }: Props
   const totalNum = parseFloat(totalAmount.replace(/,/g, '')) || 0;
   const installmentsNum = parseInt(installments, 10) || 0;
 
-  // ระบบคำนวณยอดตัดบัญชีรายงวดอัตโนมัติ — เศษทศนิยมปัดไปรวมในงวดที่ 1
-  const schedule = useMemo(() => {
-    if (totalNum <= 0 || installmentsNum <= 0 || !startPeriod) return [];
-    const per = Math.floor((totalNum / installmentsNum) * 100) / 100;
-    const first = Math.round((totalNum - per * (installmentsNum - 1)) * 100) / 100;
-    const [startMonth, startYear] = startPeriod.split('/').map((v) => parseInt(v, 10));
-    return Array.from({ length: installmentsNum }, (_, i) => {
-      const monthIndex = startMonth - 1 + i;
-      const month = (monthIndex % THAI_BE_MONTHS_PER_YEAR) + 1;
-      const year = startYear + Math.floor(monthIndex / THAI_BE_MONTHS_PER_YEAR);
-      return {
-        seq: i + 1,
-        date: `25/${String(month).padStart(2, '0')}/${year}`,
-        amount: i === 0 ? first : per,
-      };
-    });
-  }, [totalNum, installmentsNum, startPeriod]);
+  const schedule = useMemo(
+    () => buildGlWriteoffSchedule(totalNum, installmentsNum, startPeriod),
+    [totalNum, installmentsNum, startPeriod],
+  );
+
+  const perPeriodAmount = glWriteoffPerPeriodAmount(totalNum, installmentsNum);
+
+  // ยอดบัญชีเดบิต/เครดิตล็อกตามยอดตัดบัญชีต่อเดือน (งวดที่ 2 เป็นต้นไป) เสมอ
+  useEffect(() => {
+    setDebitLines((prev) => prev.map((l) => ({ ...l, amount: perPeriodAmount })));
+    setCreditLines((prev) => prev.map((l) => ({ ...l, amount: perPeriodAmount })));
+  }, [perPeriodAmount]);
 
   const debitTotal = debitLines.reduce((sum, l) => sum + l.amount, 0);
   const creditTotal = creditLines.reduce((sum, l) => sum + l.amount, 0);
@@ -124,13 +118,6 @@ export default function GlWriteoffFormPage({ existing, onCancel, onSave }: Props
     patch: Partial<GlWriteoffLine>,
   ) {
     const update = (lines: GlWriteoffLine[]) => lines.map((l) => (l.id === id ? { ...l, ...patch } : l));
-    if (kind === 'debit') setDebitLines(update);
-    else setCreditLines(update);
-    markDirty();
-  }
-
-  function removeLine(kind: 'debit' | 'credit', id: string) {
-    const update = (lines: GlWriteoffLine[]) => lines.filter((l) => l.id !== id);
     if (kind === 'debit') setDebitLines(update);
     else setCreditLines(update);
     markDirty();
@@ -193,7 +180,6 @@ export default function GlWriteoffFormPage({ existing, onCancel, onSave }: Props
             <col style={{ width: '180px' }} />
             <col style={{ width: '260px' }} />
             <col style={{ width: '200px' }} />
-            <col style={{ width: '56px' }} />
           </colgroup>
           <thead>
             <tr>
@@ -207,10 +193,7 @@ export default function GlWriteoffFormPage({ existing, onCancel, onSave }: Props
               <th>
                 {t('รหัส CV')} <span className="aft-required">*</span>
               </th>
-              <th className="glw-col-amount">
-                {t('จำนวนเงิน')} <span className="aft-required">*</span>
-              </th>
-              <th></th>
+              <th className="glw-col-amount">{t('จำนวนเงิน')}</th>
             </tr>
           </thead>
           <tbody>
@@ -242,38 +225,14 @@ export default function GlWriteoffFormPage({ existing, onCancel, onSave }: Props
                     searchable
                   />
                 </td>
-                <td className="glw-col-amount">
-                  <div className="aft-input-group">
-                    <input
-                      type="text"
-                      inputMode="decimal"
-                      className="aft-input-amount"
-                      style={{ textAlign: 'right' }}
-                      value={line.amount > 0 ? formatMoney(line.amount) : ''}
-                      placeholder="0.00"
-                      onChange={(e) => {
-                        const n = parseFloat(sanitizeNumericInput(e.target.value)) || 0;
-                        updateLine(kind, line.id, { amount: n });
-                      }}
-                    />
-                    <span className="aft-input-unit">THB</span>
-                  </div>
-                </td>
-                <td>
-                  {lines.length > 1 && (
-                    <button className="ft-action-btn" title={t('ลบ')} onClick={() => removeLine(kind, line.id)}>
-                      <DeleteIcon />
-                    </button>
-                  )}
-                </td>
+                <td className="glw-col-amount">{formatWholeAmount(line.amount)} THB</td>
               </tr>
             ))}
             <tr className="glw-total-row">
               <td colSpan={4} className="glw-total-label">
                 {t('ยอดรวม')}
               </td>
-              <td className="glw-col-amount glw-total-amount">{formatMoney(total)} THB</td>
-              <td></td>
+              <td className="glw-col-amount glw-total-amount">{formatWholeAmount(total)} THB</td>
             </tr>
           </tbody>
         </table>
@@ -513,10 +472,6 @@ export default function GlWriteoffFormPage({ existing, onCancel, onSave }: Props
               {t('ระบบคำนวณยอดเดบิตและเครดิตเริ่มต้นจากยอดรวมทั้งสัญญา ออกมาเป็นยอดตัดบัญชีต่อเดือน')}
             </div>
           </div>
-          <button className="glw-add-line-btn" onClick={() => setDebitLines((prev) => [...prev, newLine(GL_ACCOUNT_CODE_OPTIONS[0])])}>
-            <PlusIcon color="#1570ef" />
-            {t('เพิ่มบัญชีเดบิต')}
-          </button>
         </div>
         {renderLineTable('debit')}
 
@@ -529,10 +484,6 @@ export default function GlWriteoffFormPage({ existing, onCancel, onSave }: Props
               {t('ระบบคำนวณยอดเดบิตและเครดิตเริ่มต้นจากยอดรวมทั้งสัญญา ออกมาเป็นยอดตัดบัญชีต่อเดือน')}
             </div>
           </div>
-          <button className="glw-add-line-btn" onClick={() => setCreditLines((prev) => [...prev, newLine(GL_ACCOUNT_CODE_OPTIONS[1])])}>
-            <PlusIcon color="#1570ef" />
-            {t('เพิ่มบัญชีเครดิต')}
-          </button>
         </div>
         {renderLineTable('credit')}
 

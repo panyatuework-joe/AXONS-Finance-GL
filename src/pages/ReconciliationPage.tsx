@@ -177,8 +177,9 @@ export default function ReconciliationPage({ data: items, onChange, onView }: Pr
                 <tr key={item.id}>
                   <td>{(pageClamped - 1) * PAGE_SIZE + idx + 1}</td>
                   <td>
-                    <div className="recon-name">{t(item.name)}</div>
-                    <div className="recon-category">{item.category}</div>
+                    <div className="recon-name">
+                      {t(item.name)} <span className="recon-category">· {item.category}</span>
+                    </div>
                   </td>
                   <td>{item.matchedReport}</td>
                   <td>{item.lastChecked}</td>
