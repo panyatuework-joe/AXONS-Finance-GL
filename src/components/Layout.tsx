@@ -252,7 +252,7 @@ export default function Layout({ activeKey, onNavigate, onLogoutClick, children 
                 {glWriteoffExpanded && (
                   <>
                     {([
-                      ['gl-writeoff-create', 'สร้างรายการตัดบัญชี'],
+                      ['gl-writeoff-create', 'จัดการรายการตัดบัญชี'],
                       ['gl-writeoff-list', 'รายการตัดบัญชี'],
                     ] as [SidebarKey, string][]).map(([key, label]) => (
                       <div

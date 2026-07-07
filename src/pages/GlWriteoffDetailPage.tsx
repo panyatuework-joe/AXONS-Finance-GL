@@ -4,7 +4,7 @@ import { useApp } from '../context/AppContext';
 import Dialog from '../components/Dialog';
 import StatusBadge from '../components/StatusBadge';
 import { buildGlWriteoffSchedule, formatWholeAmount, glWriteoffPerPeriodAmount } from '../utils';
-import { ChevronBreadcrumbIcon, DeleteIcon } from '../icons';
+import { CancelCircleIcon, ChevronBreadcrumbIcon, FileDocIcon } from '../icons';
 
 interface Props {
   entry: GlWriteoffEntry;
@@ -28,6 +28,11 @@ export default function GlWriteoffDetailPage({ entry, onBack, onDelete }: Props)
 
   // ยอดบัญชีเดบิต/เครดิตล็อกตามยอดตัดบัญชีต่อเดือน (งวดที่ 2 เป็นต้นไป) เสมอ ไม่อิงค่าที่บันทึกไว้ในบรรทัด
   const perPeriodAmount = glWriteoffPerPeriodAmount(entry.totalAmount, entry.installments);
+
+  const paidAmount = useMemo(
+    () => schedule.slice(0, entry.installmentsPaid).reduce((sum, row) => sum + row.amount, 0),
+    [schedule, entry.installmentsPaid],
+  );
 
   function handleConfirmDelete() {
     setDeleteConfirmOpen(false);
@@ -84,33 +89,35 @@ export default function GlWriteoffDetailPage({ entry, onBack, onDelete }: Props)
 
   return (
     <>
-      <div className="aft-page-header">
+      <div className="aft-page-header glwd-header">
         <div className="aft-breadcrumb">
           <span className="aft-breadcrumb-link" onClick={onBack}>
-            {t('สร้างรายการตัดบัญชี')}
+            {t('การตัดบัญชี GL')}
           </span>
           <ChevronBreadcrumbIcon />
           <span className="aft-breadcrumb-current">{t('รายละเอียดรายการตัดบัญชี')}</span>
         </div>
         <div className="view-title-row">
-          <h1 className="aft-page-title">{t('รายละเอียดรายการตัดบัญชี')}</h1>
+          <div className="glwd-title-line">
+            <h1 className="aft-page-title">{t('รายละเอียดรายการตัดบัญชี')}</h1>
+            <span className="glwd-title-code">| {entry.code}</span>
+            <span className="glwd-status-chip">
+              <StatusBadge value={entry.status} />
+            </span>
+          </div>
           <div className="view-header-actions">
             <button className="ft-btn-outline-danger" onClick={() => setDeleteConfirmOpen(true)}>
-              <DeleteIcon color="#D92D20" />
-              {t('ลบ')}
+              <CancelCircleIcon color="#D92D20" />
+              {t('ยกเลิกการตัดบัญชี')}
             </button>
           </div>
         </div>
       </div>
 
-      <div className="aft-card">
-        <div className="aft-section-title">{t('รายละเอียด')}</div>
+      <div className="aft-card glwd-view">
+        <div className="aft-section-title">{t('ข้อมูลการตัดบัญชี')}</div>
 
-        <div className="view-detail-grid">
-          <div className="view-detail-field">
-            <span className="view-detail-label">{t('รหัสรายการตัดบัญชี')}</span>
-            <span className="view-detail-value">{entry.code}</span>
-          </div>
+        <div className="view-detail-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
           <div className="view-detail-field">
             <span className="view-detail-label">{t('บริษัท')}</span>
             <span className="view-detail-value">{t(entry.company)}</span>
@@ -135,7 +142,7 @@ export default function GlWriteoffDetailPage({ entry, onBack, onDelete }: Props)
             <span className="view-detail-label">{t('ประเภท')}</span>
             <span className="view-detail-value">{t(entry.category)}</span>
           </div>
-          <div className="view-detail-field">
+          <div className="view-detail-field" style={{ gridColumn: '1 / -1' }}>
             <span className="view-detail-label">{t('รายละเอียด')}</span>
             <span className="view-detail-value">{t(entry.description)}</span>
           </div>
@@ -144,28 +151,12 @@ export default function GlWriteoffDetailPage({ entry, onBack, onDelete }: Props)
             <span className="view-detail-value">{formatMoney(entry.totalAmount)} THB</span>
           </div>
           <div className="view-detail-field">
-            <span className="view-detail-label">{t('ความคืบหน้า')}</span>
-            <span className="view-detail-value">
-              {entry.installmentsPaid}/{entry.installments} {t('งวด')}
-            </span>
+            <span className="view-detail-label">{t('จำนวนงวด')}</span>
+            <span className="view-detail-value">{entry.installments}</span>
           </div>
           <div className="view-detail-field">
-            <span className="view-detail-label">{t('วันที่เริ่มตัดบัญชี')}</span>
-            <span className="view-detail-value">{entry.startDate}</span>
-          </div>
-          <div className="view-detail-field">
-            <span className="view-detail-label">{t('ผู้สร้าง')}</span>
-            <span className="view-detail-value">{entry.createdBy}</span>
-          </div>
-          <div className="view-detail-field">
-            <span className="view-detail-label">{t('วันที่สร้าง')}</span>
-            <span className="view-detail-value">{entry.createdAt}</span>
-          </div>
-          <div className="view-detail-field">
-            <span className="view-detail-label">{t('สถานะ')}</span>
-            <span>
-              <StatusBadge value={entry.status} />
-            </span>
+            <span className="view-detail-label">{t('เริ่มตัดบัญชีงวดแรก')}</span>
+            <span className="view-detail-value">{entry.startPeriod}</span>
           </div>
         </div>
 
@@ -175,26 +166,76 @@ export default function GlWriteoffDetailPage({ entry, onBack, onDelete }: Props)
         {entry.files.length === 0 ? (
           <span className="glw-file-empty">{t('ไม่มีไฟล์แนบ')}</span>
         ) : (
-          <div>
-            {entry.files.map((name, i) => (
-              <span className="glw-file-chip" key={`${name}-${i}`}>
-                {name}
+          <>
+            <div className="glwd-file-header">
+              <span className="glwd-file-header-text">
+                {t('ไฟล์เอกสารแนบ')} <span className="glwd-file-count">{entry.files.length}</span> {t('รายการ')}
               </span>
-            ))}
-          </div>
+              <span className="glwd-file-header-divider" />
+            </div>
+            <div className="glwd-file-list">
+              {entry.files.map((name, i) => (
+                <div className="glwd-file-card" key={`${name}-${i}`}>
+                  <FileDocIcon />
+                  <span className="glwd-file-name">{name}</span>
+                </div>
+              ))}
+            </div>
+          </>
         )}
 
         <div className="aft-divider" />
 
-        <div className="aft-section-title">{t('ข้อมูลบัญชีเดบิต')}</div>
+        <div className="glw-section-header">
+          <div>
+            <div className="aft-section-title" style={{ marginBottom: 0 }}>
+              {t('ข้อมูลบัญชีเดบิต')}
+            </div>
+            <div className="glw-section-subtitle">
+              {t('ระบบคำนวณยอดเดบิตและเครดิตเริ่มต้นจากยอดรวมทั้งสัญญา ออกมาเป็นยอดตัดบัญชีต่อเดือน')}
+            </div>
+          </div>
+        </div>
         {renderLineTable(entry.debitLines)}
 
-        <div className="aft-section-title">{t('ข้อมูลบัญชีเครดิต')}</div>
+        <div className="glw-section-header">
+          <div>
+            <div className="aft-section-title" style={{ marginBottom: 0 }}>
+              {t('ข้อมูลบัญชีเครดิต')}
+            </div>
+            <div className="glw-section-subtitle">
+              {t('ระบบคำนวณยอดเดบิตและเครดิตเริ่มต้นจากยอดรวมทั้งสัญญา ออกมาเป็นยอดตัดบัญชีต่อเดือน')}
+            </div>
+          </div>
+        </div>
         {renderLineTable(entry.creditLines)}
 
         <div className="aft-divider" />
 
-        <div className="aft-section-title">{t('รายละเอียดการตัดบัญชีรายงวด')}</div>
+        <div className="glw-section-header">
+          <div>
+            <div className="aft-section-title" style={{ marginBottom: 0 }}>
+              {t('รายละเอียดการตัดบัญชีรายงวด')}
+            </div>
+            <div className="glw-section-subtitle">{t('ระบบคำนวณยอดตัดบัญชีต่อเดือนอัตโนมัติ')}</div>
+          </div>
+        </div>
+
+        <div className="glwd-summary-row">
+          <div className="glwd-summary-card">
+            <span className="glwd-summary-label">{t('ยอดเงินรวมทั้งสัญญา')}</span>
+            <span className="glwd-summary-value">
+              {formatMoney(entry.totalAmount)} <span className="glwd-summary-unit">THB</span>
+            </span>
+          </div>
+          <div className="glwd-summary-card">
+            <span className="glwd-summary-label">{t('ยอดตัดบัญชีไปแล้ว')}</span>
+            <span className="glwd-summary-value">
+              {formatMoney(paidAmount)} <span className="glwd-summary-unit">THB</span>
+            </span>
+          </div>
+        </div>
+
         <div className="glw-line-table-wrapper">
           <table className="glw-line-table glw-schedule-table">
             <colgroup>
@@ -221,9 +262,9 @@ export default function GlWriteoffDetailPage({ entry, onBack, onDelete }: Props)
                   <td className="glw-col-amount">{formatMoney(row.amount)} THB</td>
                   <td>
                     {row.seq <= entry.installmentsPaid ? (
-                      <span className="status-badge status-badge--ok">{t('จ่ายแล้ว')}</span>
+                      <span className="glwd-chip glwd-chip--ok">{t('จ่ายสำเร็จ')}</span>
                     ) : (
-                      <span className="status-badge status-badge--neutral">{t('รอตัดบัญชี')}</span>
+                      <span className="glwd-chip glwd-chip--neutral">{t('รอตัดจ่าย')}</span>
                     )}
                   </td>
                 </tr>

@@ -295,7 +295,7 @@ export default function GlWriteoffListPage({ data, onCreate, onView, onImport }:
   return (
     <>
       <div className="ft-page-header">
-        <h1 className="ft-page-title">{t('สร้างรายการตัดบัญชี')}</h1>
+        <h1 className="ft-page-title">{t('จัดการรายการตัดบัญชี')}</h1>
         <div className="ft-header-buttons">
           <button className="ft-btn-outline" onClick={handleDownload}>
             <DownloadIcon />

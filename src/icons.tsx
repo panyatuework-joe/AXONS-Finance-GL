@@ -217,11 +217,11 @@ export const MoreIcon = ({ size = 20, color = '#1570ef' }: { size?: number; colo
   </svg>
 );
 
-export const FileImportIcon = ({ size = 20, color = '#1570ef' }: { size?: number; color?: string }) => (
+export const FileImportIcon = ({ size = 20, color = '#074E9F' }: { size?: number; color?: string }) => (
   <svg width={size} height={size} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M11.6667 1.66669H5.83333C5.39131 1.66669 4.96738 1.84228 4.65482 2.15485C4.34226 2.46741 4.16667 2.89133 4.16667 3.33335V16.6667C4.16667 17.1087 4.34226 17.5326 4.65482 17.8452C4.96738 18.1578 5.39131 18.3334 5.83333 18.3334H14.1667C14.6087 18.3334 15.0326 18.1578 15.3452 17.8452C15.6577 17.5326 15.8333 17.1087 15.8333 16.6667V6.66669L11.6667 1.66669Z" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
     <path d="M11.25 1.66669V5.00002C11.25 5.44205 11.4256 5.86597 11.7382 6.17854C12.0507 6.4911 12.4747 6.66669 12.9167 6.66669H15.8333" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M10 9.16669V14.1667M10 14.1667L7.91667 12.0834M10 14.1667L12.0833 12.0834" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M10 14.1667V9.16669M10 9.16669L7.91667 11.25M10 9.16669L12.0833 11.25" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 
@@ -274,6 +274,19 @@ export const DialogCancelIcon = () => (
 export const DialogSaveIcon = () => (
   <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M19.3021 7.97137C19.2043 7.97377 19.1068 7.98334 19.0104 8.00001H15.3333C11.307 8.00001 8 11.307 8 15.3333V48.6667C8 52.693 11.307 56 15.3333 56H17.6719C17.8866 56.0353 18.1056 56.0353 18.3203 56H45.6719C45.8866 56.0353 46.1056 56.0353 46.3203 56H48.6667C52.693 56 56 52.693 56 48.6667V20.6667C55.9999 20.3842 55.94 20.105 55.8242 19.8473C55.7084 19.5897 55.5393 19.3595 55.3281 19.1719L43.3281 8.50522C42.9622 8.17994 42.4896 8.00019 42 8.00001H40.9948C40.7801 7.96474 40.5611 7.96474 40.3464 8.00001H19.6615C19.5428 7.97967 19.4225 7.97008 19.3021 7.97137ZM15.3333 12H17.3333V19.3333C17.3333 21.8866 19.4467 24 22 24H38C40.5533 24 42.6667 21.8866 42.6667 19.3333V13.2682L52 21.5651V48.6667C52 50.531 50.531 52 48.6667 52H48V36.6667C48 34.1134 45.8866 32 43.3333 32H20.6667C18.1134 32 16 34.1134 16 36.6667V52H15.3333C13.469 52 12 50.531 12 48.6667V15.3333C12 13.469 13.469 12 15.3333 12ZM21.3333 12H38.6667V19.3333C38.6667 19.7267 38.3934 20 38 20H22C21.6066 20 21.3333 19.7267 21.3333 19.3333V12ZM20.6667 36H43.3333C43.7267 36 44 36.2733 44 36.6667V52H20V36.6667C20 36.2733 20.2733 36 20.6667 36Z" fill="#074E9F"/>
+  </svg>
+);
+
+export const CancelCircleIcon = ({ color = '#D92D20' }: { color?: string }) => (
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="10" cy="10" r="7.5" stroke={color} strokeWidth="1.5"/>
+    <path d="M12.5 7.5L7.5 12.5M7.5 7.5L12.5 12.5" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+export const FileDocIcon = ({ size = 48 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12.5 4C10.019 4 8 6.019 8 8.5V39.5C8 41.981 10.019 44 12.5 44H35.5C37.981 44 40 41.981 40 39.5V20H28.5C26.019 20 24 17.981 24 15.5V4H12.5ZM27 4.87891V15.5C27 16.327 27.673 17 28.5 17H39.1211L27 4.87891Z" fill="#074E9F"/>
   </svg>
 );
 

@@ -2851,6 +2851,174 @@ th.ft-table-action-col {
   white-space: nowrap;
 }
 
+/* ===== GL WRITE-OFF DETAIL VIEW (glwd-) ===== */
+.glwd-title-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.glwd-title-code {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 36px;
+  color: #344054;
+  white-space: nowrap;
+}
+
+.glwd-view .view-detail-label {
+  color: #344054;
+  font-weight: 400;
+}
+
+.glwd-view .view-detail-value {
+  font-weight: 600;
+}
+
+.glwd-file-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.glwd-file-header-text {
+  color: #101828;
+}
+
+.glwd-file-count {
+  color: #074e9f;
+  font-weight: 600;
+}
+
+.glwd-header .aft-breadcrumb-current {
+  color: #344054;
+}
+
+.glwd-status-chip .status-badge--info {
+  background: #ecf2f8;
+  color: #0086c9;
+}
+
+.glwd-status-chip .status-badge--warn {
+  background: #fef3e5;
+  color: #f8bd26;
+}
+
+.glwd-status-chip .status-badge--bad {
+  background: #f8e5e5;
+  color: #d92d20;
+}
+
+.glwd-status-chip .status-badge--ok {
+  background: #e4f0e5;
+  color: #07a721;
+}
+
+.glwd-view .glw-section-subtitle {
+  color: #8a95a8;
+}
+
+.glwd-view .glw-total-label,
+.glwd-view .glw-total-amount {
+  color: #0086c9;
+}
+
+.glwd-file-header-divider {
+  flex: 1;
+  height: 1px;
+  background: #e4e7ec;
+}
+
+.glwd-file-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.glwd-file-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 302px;
+  padding: 8px;
+  border: 1px solid #e4e7ec;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.glwd-file-name {
+  font-size: 16px;
+  color: #344054;
+  line-height: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.glwd-summary-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.glwd-summary-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px;
+  background: #f5fafe;
+  border: 1px solid #e4e7ec;
+  border-radius: 8px;
+}
+
+.glwd-summary-label {
+  font-size: 14px;
+  line-height: 22px;
+  color: #667085;
+}
+
+.glwd-summary-value {
+  font-size: 18px;
+  line-height: 28px;
+  font-weight: 600;
+  color: #0086c9;
+}
+
+.glwd-summary-unit {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.glwd-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 14px;
+  line-height: 22px;
+  white-space: nowrap;
+}
+
+.glwd-chip--ok {
+  background: #e4f0e5;
+  color: #07a721;
+}
+
+.glwd-chip--neutral {
+  background: #e4e7ec;
+  color: #344054;
+}
+
+@media (max-width: 900px) {
+  .glwd-summary-row {
+    flex-direction: column;
+  }
+}
+
 @media (max-width: 768px) {
   .glw-form-row-3 {
     flex-direction: column;
